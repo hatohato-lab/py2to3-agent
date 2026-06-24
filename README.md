@@ -34,7 +34,7 @@ python eval/oracle.py --selftest
 
 ## エージェントの動かし方（candidate の作り方）
 
-`agent/py2to3-agent.md` は **Claude Code 用のエージェント定義（指示書）** です。呼ばれて初めて動きます。
+`.claude/agents/py2to3-agent.md` は **Claude Code 用のエージェント定義（指示書）** です。呼ばれて初めて動きます。
 
 - `input.py` を `candidate.py` に移植させるには、この定義を **`.claude/agents/` に置いて呼ぶ**か、定義の指示に従って**任意の LLM に移植させ**ます。
 - 完全自動の1コマンドは用意していません（学習・手法実証が目的）。
@@ -70,7 +70,7 @@ flowchart LR
 
 ## ファイル構成
 
-- `agent/py2to3-agent.md` … エージェントの定義。
+- `.claude/agents/py2to3-agent.md` … エージェントの定義。
 - `eval/oracle.py` … 採点プログラム（決定的オラクル。`--selftest` 内蔵）。
 - `eval/corpus/<ケース>/` … `input.py`（お題）/ `golden.txt`（期待出力）/ `reference.py`（正しい移植の見本）。
 - `candidate.py` … エージェントが生成する採点対象（`.gitignore` 対象。clone 直後は存在しません）。
