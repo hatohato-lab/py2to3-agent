@@ -1,6 +1,11 @@
 # py2to3-agent
 
+*A Claude Code agent that ports legacy Python 2 code to Python 3, graded by a deterministic golden-output oracle with built-in self-verification.
+A working example of eval-driven development (EDD).*
+
 サポートの終わった **Python 2 のコードを、振る舞いを保ったまま Python 3 へ移植する**エージェントと、その移植が正しいかを自動で判定する**オラクル（採点プログラム）**。
+
+専門用語を使わない説明は [説明書.md](説明書.md) にあります。
 
 ## 概要
 
@@ -62,19 +67,21 @@ flowchart LR
 
 1. `eval/corpus/<ケース>/input.py` … 移植のお題（Python 2）。
 2. エージェントが `candidate.py`（Python 3）へ移植。
-3. `eval/oracle.py` が **`py_compile` で構文チェック → `python3` で実行 → 出力が `golden.txt` と完全一致するか**で判定。
+3. `eval/oracle.py` が **`py_compile` で構文チェック → `python3` で実行 → 出力が `golden.txt` と一致するか**で判定（一致は前後の空白・改行を除いた完全一致。コンパイル・実行とも 10 秒でタイムアウトし FAIL）。
 
 ## 合否の基準（eval）
 
-各ケースで「`py_compile` 成功 ＋ `python3` 実行の標準出力が `golden.txt` と完全一致」。
+各ケースで「`py_compile` 成功 ＋ `python3` 実行の標準出力が `golden.txt` と、前後の空白・改行を除いた完全一致」。corpus が 0 件のときは PASS にせず、エラー（exit 1）で終了します。
 
 ## ファイル構成
 
 - `.claude/agents/py2to3-agent.md` … エージェントの定義。
 - `eval/oracle.py` … 採点プログラム（決定的オラクル。`--selftest` 内蔵）。
 - `eval/corpus/<ケース>/` … `input.py`（お題）/ `golden.txt`（期待出力）/ `reference.py`（正しい移植の見本）。
-- `candidate.py` … エージェントが生成する採点対象（`.gitignore` 対象。clone 直後は存在しません）。
+- `candidate.py` … エージェントが生成する採点対象。**各 corpus ケースのディレクトリに置く**（`.gitignore` 対象。clone 直後は存在しません）。
 - `design/design.md` … 設計の考え方。
+- `説明書.md` … 専門用語を使わない説明。
+- `.github/workflows/ci.yml` … CI（push / pull request ごとに `--selftest` を自動実行）。
 
 ---
 
